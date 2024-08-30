@@ -16,6 +16,14 @@ public class User {
         this.address = address;
     }
 
+    public User(int userId, String name, String email, String phoneNumber, String address) {
+        this.userId = userId;
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
+
     // Getters and Setters
     public int getUserId() {
         return userId;
@@ -61,8 +69,7 @@ public class User {
     @Override
     public String toString() {
         return "User {" +
-                "User ID = " + userId +
-                ", Name = '" + name + '\'' +
+                "Name = '" + name + '\'' +
                 ", Email = '" + email + '\'' +
                 ", Phone Number = '" + phoneNumber + '\'' +
                 ", Address = '" + address + '\'' +

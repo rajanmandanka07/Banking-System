@@ -1,17 +1,13 @@
 package com.banking.main;
 
 import com.banking.controller.BankingController;
-import com.banking.util.DatabaseConnection;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Connection connection = DatabaseConnection.getConnection();
         BankingController controller = new BankingController();
 
         System.out.println("Welcome to the Banking System");
@@ -36,22 +32,13 @@ public class Main {
                     existingUserMenu(scanner, controller);
                     break;
                 case 3:
+                    controller.exitApplication();  // Close the connection
                     running = false;
                     System.out.println("Thank you for using the Banking System!");
                     break;
                 default:
                     System.out.println("Invalid option. Please try again.");
             }
-        }
-
-        // Close the connection when the application exits
-        try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-//                System.out.println("Database connection closed.");
-            }
-        } catch (SQLException e) {
-            System.err.println("Failed to close database connection: " + e.getMessage());
         }
 
         scanner.close();
@@ -75,7 +62,9 @@ public class Main {
                     controller.handleAccountCreation();
                     break;
                 case 2:
-                    loggedInMenu(scanner, controller);
+                    if (controller.handleUserLogin()) {
+                        loggedInMenu(scanner, controller);
+                    }
                     break;
                 case 3:
                     running = false;

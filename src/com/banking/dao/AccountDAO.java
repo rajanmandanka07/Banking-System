@@ -11,7 +11,7 @@ public class AccountDAO {
 
     // Method to add a new account to the database
     public void addAccount(Account account) throws SQLException {
-        String sql = "INSERT INTO accounts (account_number, user_id, balance, account_type, created_at) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO accounts (account_number, user_id, balance, account_type, created_at, password, pin) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             Connection conn = DatabaseConnection.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -20,6 +20,8 @@ public class AccountDAO {
             pstmt.setDouble(3, account.getBalance());
             pstmt.setString(4, account.getAccountType());
             pstmt.setTimestamp(5, account.getCreatedAt());
+            pstmt.setString(6, account.getPassword());
+            pstmt.setString(7, account.getPin());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -41,7 +43,9 @@ public class AccountDAO {
                         rs.getInt("user_id"),
                         rs.getDouble("balance"),
                         rs.getString("account_type"),
-                        rs.getTimestamp("created_at")
+                        rs.getTimestamp("created_at"),
+                        rs.getString("password"),
+                        rs.getString("pin")
                 );
             }
         } catch (SQLException e) {
@@ -65,7 +69,9 @@ public class AccountDAO {
                         rs.getInt("user_id"),
                         rs.getDouble("balance"),
                         rs.getString("account_type"),
-                        rs.getTimestamp("created_at")
+                        rs.getTimestamp("created_at"),
+                        rs.getString("password"),
+                        rs.getString("pin")
                 );
             }
         } catch (SQLException e) {
@@ -76,13 +82,15 @@ public class AccountDAO {
 
     // Method to update an existing account
     public void updateAccount(Account account) throws SQLException {
-        String sql = "UPDATE accounts SET balance = ?, account_type = ? WHERE account_number = ?";
+        String sql = "UPDATE accounts SET balance = ?, account_type = ?, password = ?, pin = ? WHERE account_number = ?";
         try {
             Connection conn = DatabaseConnection.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setDouble(1, account.getBalance());
             pstmt.setString(2, account.getAccountType());
-            pstmt.setString(3, account.getAccountNumber());
+            pstmt.setString(3, account.getPassword());
+            pstmt.setString(4, account.getPin());
+            pstmt.setString(5, account.getAccountNumber());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -117,7 +125,9 @@ public class AccountDAO {
                         rs.getInt("user_id"),
                         rs.getDouble("balance"),
                         rs.getString("account_type"),
-                        rs.getTimestamp("created_at")
+                        rs.getTimestamp("created_at"),
+                        rs.getString("password"),
+                        rs.getString("pin")
                 );
                 accounts.add(account);
             }
