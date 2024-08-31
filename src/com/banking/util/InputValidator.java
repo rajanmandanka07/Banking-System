@@ -50,12 +50,10 @@ public class InputValidator {
 
     // Validate account details
     public static boolean isValidAccount(Account account) {
-        if (account == null) {
-            return false;
-        }
-        return validateAccountNumber(account.getAccountNumber()) &&
-                account.getUserId() > 0 &&
-                account.getBalance() >= 0 &&
-                account.getAccountType() != null && !account.getAccountType().isEmpty();
+        return account != null;
+//        return validateAccountNumber(account.getAccountNumber()) &&
+//                account.getUserId() > 0 &&
+//                account.getBalance() >= 0 &&
+//                account.getAccountType() != null && !account.getAccountType().isEmpty();
     }
 }

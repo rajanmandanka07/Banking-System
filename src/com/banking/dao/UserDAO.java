@@ -74,4 +74,30 @@ public class UserDAO {
             throw new RuntimeException(e);
         }
     }
+
+    // Method to get a user by phone number
+    public User getUserByPhoneNumber(String phoneNumber) throws SQLException {
+        String sql = "SELECT * FROM users WHERE phone_number = ?";
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, phoneNumber);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    // Assuming you have a User constructor or setter methods to populate the User object
+                    return new User(
+                            rs.getInt("user_id"),
+                            rs.getString("name"),
+                            rs.getString("email"),
+                            phoneNumber,  // Phone number from ResultSet
+                            rs.getString("address")
+                    );
+                } else {
+                    return null; // No user found with the provided phone number
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

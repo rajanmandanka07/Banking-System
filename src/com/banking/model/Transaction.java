@@ -27,7 +27,7 @@ public class Transaction {
         this.accountNumber = accountNumber;
         this.transactionType = transactionType;
         this.amount = amount;
-        this.transactionDate = new Timestamp(System.currentTimeMillis()); // set the current timestamp
+        this.transactionDate = new Timestamp(System.currentTimeMillis());
     }
 
     // Getters and Setters

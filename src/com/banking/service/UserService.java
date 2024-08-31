@@ -14,17 +14,17 @@ public class UserService {
     }
 
     // Method to register a new user
-    public void registerUser(User user) {
+    public boolean registerUser(User user) {
         if (InputValidator.isValidUser(user)) {
             try {
                 userDAO.addUser(user);
-                System.out.println("User registered successfully!");
             } catch (Exception e) {
                 System.err.println("Failed to register user: " + e.getMessage());
             }
         } else {
             System.err.println("Invalid user data provided.");
         }
+        return true;
     }
 
     // Method to update user details
@@ -33,7 +33,7 @@ public class UserService {
             User existingUser = userDAO.getUserById(userId);
             if (existingUser != null) {
                 if (InputValidator.isValidUser(user)) {
-                    user.setUserId(userId); // Ensure the correct userId is set
+                    user.setUserId(userId);
                     userDAO.updateUser(user);
                     System.out.println("User details updated successfully!");
                 } else {
@@ -63,6 +63,23 @@ public class UserService {
             System.err.println(e.getMessage());
         } catch (Exception e) {
             System.err.println("Failed to delete user: " + e.getMessage());
+        }
+    }
+
+    // Method to get user ID by phone number
+    public Integer getUserIdByPhoneNumber(String phoneNumber) {
+        try {
+            // Fetch user details using the phone number
+            User user = userDAO.getUserByPhoneNumber(phoneNumber);
+
+            if (user != null) {
+                return user.getUserId();
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            System.err.println("Error fetching user by phone number: " + e.getMessage());
+            return null;
         }
     }
 }

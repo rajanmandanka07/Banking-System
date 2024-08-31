@@ -10,15 +10,19 @@ public class Account {
     private double balance;
     private String accountType;
     private Timestamp createdAt;
+    private String password;
+    private String pin;
 
     // Constructor
-    public Account(int accountId, String accountNumber, int userId, double balance, String accountType, Timestamp createdAt) {
+    public Account(int accountId, String accountNumber, int userId, double balance, String accountType, Timestamp createdAt, String password, String pin) {
         this.accountId = accountId;
         this.accountNumber = accountNumber;
         this.userId = userId;
         this.balance = balance;
         this.accountType = accountType;
         this.createdAt = createdAt;
+        this.password = password;
+        this.pin = pin;
     }
 
     // Getters and Setters
@@ -70,6 +74,22 @@ public class Account {
         this.createdAt = createdAt;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPin() {
+        return pin;
+    }
+
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
+
     // toString() method for displaying account details
     @Override
     public String toString() {
@@ -80,6 +100,8 @@ public class Account {
                 ", Balance = " + balance +
                 ", Account Type = '" + accountType + '\'' +
                 ", Created At = " + createdAt +
+                ", Password = '******'" +  // Do not expose the actual password in toString()
+                ", Pin = '****'" +  // Do not expose the actual pin in toString()
                 '}';
     }
 }

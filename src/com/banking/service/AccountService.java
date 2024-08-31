@@ -21,17 +21,18 @@ public class AccountService {
     }
 
     // Method to create a new account
-    public void createAccount(Account account) {
+    public boolean createAccount(Account account) {
         if (InputValidator.isValidAccount(account)) {
             try {
                 accountDAO.addAccount(account);
-                System.out.println("Account created successfully!");
+                return true;
             } catch (Exception e) {
                 System.err.println("Failed to create account: " + e.getMessage());
             }
         } else {
             System.err.println("Invalid account data provided.");
         }
+        return false;
     }
 
     // Method to close an account
@@ -71,9 +72,10 @@ public class AccountService {
     }
 
     // Method to withdraw money from an account
-    public void withdraw(int accountId, double amount) throws InsufficientFundsException {
+    public void withdraw(int accountId, double amount) {
         try {
             Account account = accountDAO.getAccountById(accountId);
+            System.out.println(account);
             if (account != null && amount > 0) {
                 if (account.getBalance() >= amount) {
                     account.setBalance(account.getBalance() - amount);
@@ -90,39 +92,40 @@ public class AccountService {
             } else {
                 System.err.println("Invalid withdrawal operation.");
             }
-        } catch (InsufficientFundsException e) {
-            throw e;
         } catch (Exception e) {
             System.err.println("Failed to withdraw money: " + e.getMessage());
         }
     }
 
-    // Method to transfer funds between accounts
-    public void transferFunds(int fromAccountId, int toAccountId, double amount) throws InsufficientFundsException {
+    public void transferFunds(String fromAccountNumber, String toAccountNumber, double amount, String sourcePin) throws InsufficientFundsException {
         try {
-            Account fromAccount = accountDAO.getAccountById(fromAccountId);
-            Account toAccount = accountDAO.getAccountById(toAccountId);
+            Account fromAccount = accountDAO.getAccountByNumber(fromAccountNumber);
+            Account toAccount = accountDAO.getAccountByNumber(toAccountNumber);
 
             if (fromAccount != null && toAccount != null && amount > 0) {
-                if (fromAccount.getBalance() >= amount) {
-                    // Deduct from source account
-                    fromAccount.setBalance(fromAccount.getBalance() - amount);
-                    accountDAO.updateAccount(fromAccount);
+                if (fromAccount.getPin().equals(sourcePin)) {
+                    if (fromAccount.getBalance() >= amount) {
+                        // Deduct from source account
+                        fromAccount.setBalance(fromAccount.getBalance() - amount);
+                        accountDAO.updateAccount(fromAccount);
 
-                    // Add to destination account
-                    toAccount.setBalance(toAccount.getBalance() + amount);
-                    accountDAO.updateAccount(toAccount);
+                        // Add to destination account
+                        toAccount.setBalance(toAccount.getBalance() + amount);
+                        accountDAO.updateAccount(toAccount);
 
-                    // Record the transactions
-                    Transaction debitTransaction = new Transaction(fromAccountId, fromAccount.getAccountNumber(), "TRANSFER", amount);
-                    transactionDAO.addTransaction(debitTransaction);
+                        // Record the transactions
+                        Transaction debitTransaction = new Transaction(fromAccount.getAccountId(), fromAccountNumber, "TRANSFER", amount);
+                        transactionDAO.addTransaction(debitTransaction);
 
-                    Transaction creditTransaction = new Transaction(toAccountId, toAccount.getAccountNumber(), "TRANSFER", amount);
-                    transactionDAO.addTransaction(creditTransaction);
+                        Transaction creditTransaction = new Transaction(toAccount.getAccountId(), toAccountNumber, "TRANSFER", amount);
+                        transactionDAO.addTransaction(creditTransaction);
 
-                    System.out.println("Transfer successful!");
+                        System.out.println("Transfer successful!");
+                    } else {
+                        throw new InsufficientFundsException("Insufficient funds for transfer.");
+                    }
                 } else {
-                    throw new InsufficientFundsException("Insufficient funds for transfer.");
+                    System.err.println("Invalid PIN for source account.");
                 }
             } else {
                 System.err.println("Invalid transfer operation.");
@@ -134,12 +137,43 @@ public class AccountService {
         }
     }
 
+
     // Method to retrieve all accounts (for debugging or administrative purposes)
     public List<Account> getAllAccounts() {
         try {
             return accountDAO.getAllAccounts();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    // Method to authenticate an account with account number and password
+    public Account authenticateAccountByPassword(String accountNumber, String password) {
+        try {
+            Account account = accountDAO.getAccountByNumber(accountNumber);
+            if (account != null && account.getPassword().equals(password)) {
+                return account;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to authenticate account by password: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // Method to authenticate an account with account number and PIN
+    public Account authenticateAccountByPin(String accountNumber, String pin) {
+        try {
+            Account account = accountDAO.getAccountByNumber(accountNumber);
+            if (account != null && account.getPin().equals(pin)) {
+                return account;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to authenticate account by PIN: " + e.getMessage());
+            return null;
         }
     }
 }
