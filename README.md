@@ -126,4 +126,4 @@ For any queries, please contact the project creator:
 
 - **Name**: Rajan Mandanka
 - **GitHub**: [rajanmandanka07](https://github.com/rajanmandanka07)
-- **Email**: rajanmandanka07@gmail.com (rajanmandanka07@gmail.com)
+- **Email**: rajanmandanka07@gmail.com
