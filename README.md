@@ -124,6 +124,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For any queries, please contact the project creator:
 
-- **Name**: Rajan Mandanka
+- **Name**: Rajankumar Mandanka
 - **GitHub**: [rajanmandanka07](https://github.com/rajanmandanka07)
 - **Email**: rajanmandanka07@gmail.com
