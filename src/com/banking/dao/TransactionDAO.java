@@ -26,32 +26,6 @@ public class TransactionDAO {
         }
     }
 
-    // Method to retrieve all transactions for a specific account by account ID
-    public List<Transaction> getTransactionsByAccountId(int accountId) throws SQLException {
-        String sql = "SELECT * FROM transactions WHERE account_id = ?";
-        List<Transaction> transactions = new ArrayList<>();
-        try {
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, accountId);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                Transaction transaction = new Transaction(
-                        rs.getInt("transaction_id"),
-                        rs.getInt("account_id"),
-                        rs.getString("account_number"),
-                        rs.getString("transaction_type"),
-                        rs.getDouble("amount"),
-                        rs.getTimestamp("transaction_date")
-                );
-                transactions.add(transaction);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return transactions;
-    }
-
     // Method to retrieve all transactions for a specific account by account number
     public List<Transaction> getTransactionsByAccountNumber(String accountNumber) throws SQLException {
         String sql = "SELECT * FROM transactions WHERE account_number = ?";

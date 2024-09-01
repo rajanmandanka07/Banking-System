@@ -1,7 +1,6 @@
 package com.banking.service;
 
 import com.banking.dao.AccountDAO;
-import com.banking.dao.TransactionDAO;
 import com.banking.exception.InsufficientFundsException;
 import com.banking.model.Account;
 import com.banking.model.Transaction;
@@ -13,11 +12,11 @@ import java.util.List;
 public class AccountService {
 
     private final AccountDAO accountDAO;
-    private final TransactionDAO transactionDAO;
+    private final TransactionService transactionService;
 
     public AccountService() {
         this.accountDAO = new AccountDAO();
-        this.transactionDAO = new TransactionDAO();
+        this.transactionService = new TransactionService();
     }
 
     // Method to create a new account
@@ -60,7 +59,8 @@ public class AccountService {
 
                 // Record the transaction
                 Transaction transaction = new Transaction(accountId, account.getAccountNumber(), "DEPOSIT", amount);
-                transactionDAO.addTransaction(transaction);
+//                transactionDAO.addTransaction(transaction);
+                transactionService.recordTransaction(transaction);
 
 //                System.out.println("Deposit successful!");
             } else {
@@ -83,7 +83,8 @@ public class AccountService {
 
                     // Record the transaction
                     Transaction transaction = new Transaction(accountId, account.getAccountNumber(), "WITHDRAWAL", amount);
-                    transactionDAO.addTransaction(transaction);
+//                    transactionDAO.addTransaction(transaction);
+                    transactionService.recordTransaction(transaction);
 
                     System.out.println("Withdrawal successful!");
                 } else {
@@ -97,6 +98,7 @@ public class AccountService {
         }
     }
 
+    // Method to transfer money from an account to another account
     public void transferFunds(String fromAccountNumber, String toAccountNumber, double amount, String sourcePin) throws InsufficientFundsException {
         try {
             Account fromAccount = accountDAO.getAccountByNumber(fromAccountNumber);
@@ -115,10 +117,12 @@ public class AccountService {
 
                         // Record the transactions
                         Transaction debitTransaction = new Transaction(fromAccount.getAccountId(), fromAccountNumber, "TRANSFER", amount);
-                        transactionDAO.addTransaction(debitTransaction);
+//                        transactionDAO.addTransaction(debitTransaction);
+                        transactionService.recordTransaction(debitTransaction);
 
                         Transaction creditTransaction = new Transaction(toAccount.getAccountId(), toAccountNumber, "TRANSFER", amount);
-                        transactionDAO.addTransaction(creditTransaction);
+//                        transactionDAO.addTransaction(creditTransaction);
+                        transactionService.recordTransaction(creditTransaction);
 
                         System.out.println("Transfer successful!");
                     } else {
@@ -136,7 +140,6 @@ public class AccountService {
             System.err.println("Failed to transfer funds: " + e.getMessage());
         }
     }
-
 
     // Method to retrieve all accounts (for debugging or administrative purposes)
     public List<Account> getAllAccounts() {
@@ -177,6 +180,7 @@ public class AccountService {
         }
     }
 
+    // Method to get account by account number
     public Account getAccountByAccountNumber(String accountNumber) {
         try {
             Account account = accountDAO.getAccountByNumber(accountNumber);

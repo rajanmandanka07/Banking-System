@@ -137,7 +137,6 @@ public class BankingController {
         }
     }
 
-
     /// Handle withdrawal
     public void handleWithdrawal() {
         try {
@@ -183,14 +182,6 @@ public class BankingController {
         }
     }
 
-    // Handle viewing transactions
-    public void handleViewTransactions() {
-        System.out.print("Enter account number to view transactions: ");
-        String accountNumber = scanner.nextLine();
-
-        transactionService.getAccountTransactionHistory(accountNumber).forEach(System.out::println);
-    }
-
     // Handle viewing details
     public void handleViewDetails() {
         System.out.print("Enter account number: ");
@@ -206,6 +197,14 @@ public class BankingController {
         }
     }
 
+    // Handle viewing transactions
+    public void handleViewTransactions() {
+        System.out.print("Enter account number to view transactions: ");
+        String accountNumber = scanner.nextLine();
+
+        transactionService.getAccountTransactionHistory(accountNumber).forEach(System.out::println);
+    }
+
     // Method to exit the application and close the database connection
     public void exitApplication() {
         try {
@@ -218,8 +217,8 @@ public class BankingController {
         }
     }
 
+    // Method to Generate a 12-digit account number
     private String generateAccountNumber() {
-        // Generate a 12-digit account number
         long number = (long) (Math.random() * 1_000_000_000_000L);
         return String.format("%012d", number);
     }

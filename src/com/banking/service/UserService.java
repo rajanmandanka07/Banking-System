@@ -7,7 +7,7 @@ import com.banking.util.InputValidator;
 
 public class UserService {
 
-    private UserDAO userDAO;
+    private final UserDAO userDAO;
 
     public UserService() {
         this.userDAO = new UserDAO();
