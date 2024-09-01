@@ -41,19 +41,78 @@ public class InputValidator {
 
     // Validate user details
     public static boolean isValidUser(User user) {
-        return user != null;
-//        return validateUsername(user.getName()) &&
-//                validateEmail(user.getEmail()) &&
-//                validatePhoneNumber(user.getPhoneNumber()) &&
-//                user.getUserId() > 0;
+        if (user == null) {
+            System.out.println("User object is null.");
+            return false;
+        }
+
+        if (user.getName() == null) {
+            System.out.println("Username is null.");
+            return false;
+        }
+
+        if (user.getEmail() == null) {
+            System.out.println("Email is null.");
+            return false;
+        }
+
+        if (user.getPhoneNumber() == null) {
+            System.out.println("Phone number is null.");
+            return false;
+        }
+
+        boolean isUsernameValid = validateUsername(user.getName());
+        boolean isEmailValid = validateEmail(user.getEmail());
+        boolean isPhoneNumberValid = validatePhoneNumber(user.getPhoneNumber());
+
+        if (!isUsernameValid) {
+            System.out.println("Username validation failed: " + user.getName());
+        }
+
+        if (!isEmailValid) {
+            System.out.println("Email validation failed: " + user.getEmail());
+        }
+
+        if (!isPhoneNumberValid) {
+            System.out.println("Phone number validation failed: " + user.getPhoneNumber());
+        }
+
+        return isUsernameValid && isEmailValid && isPhoneNumberValid;
     }
 
     // Validate account details
     public static boolean isValidAccount(Account account) {
-        return account != null;
-//        return validateAccountNumber(account.getAccountNumber()) &&
-//                account.getUserId() > 0 &&
-//                account.getBalance() >= 0 &&
-//                account.getAccountType() != null && !account.getAccountType().isEmpty();
+        if (account == null) {
+            System.out.println("Account object is null.");
+            return false;
+        }
+
+        // Validate account number
+        boolean isAccountNumberValid = validateAccountNumber(account.getAccountNumber());
+        if (!isAccountNumberValid) {
+            System.out.println("Account number validation failed: " + account.getAccountNumber());
+        }
+
+        // Validate user ID
+        boolean isUserIdValid = account.getUserId() > 0;
+        if (!isUserIdValid) {
+            System.out.println("User ID validation failed: " + account.getUserId());
+        }
+
+        // Validate balance
+        boolean isBalanceValid = account.getBalance() >= 0;
+        if (!isBalanceValid) {
+            System.out.println("Balance validation failed: " + account.getBalance());
+        }
+
+        // Validate account type
+        boolean isAccountTypeValid = account.getAccountType() != null && !account.getAccountType().isEmpty();
+        if (!isAccountTypeValid) {
+            System.out.println("Account type validation failed: " + account.getAccountType());
+        }
+
+        // Return the combined result of all validations
+        return isAccountNumberValid && isUserIdValid && isBalanceValid && isAccountTypeValid;
     }
+
 }
