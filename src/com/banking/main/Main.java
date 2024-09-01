@@ -83,8 +83,9 @@ public class Main {
             System.out.println("1. Deposit Funds");
             System.out.println("2. Withdraw Funds");
             System.out.println("3. Transfer Funds");
-            System.out.println("4. View Transaction History");
-            System.out.println("5. Exit to Existing User Menu");
+            System.out.println("4. View Account Details");
+            System.out.println("5. View Transaction History");
+            System.out.println("6. Exit to Existing User Menu");
             System.out.print("Please choose an option: ");
 
             int choice = scanner.nextInt();
@@ -101,9 +102,12 @@ public class Main {
                     controller.handleFundTransfer();
                     break;
                 case 4:
-                    controller.handleViewTransactions();
+                    controller.handleViewDetails();
                     break;
                 case 5:
+                    controller.handleViewTransactions();
+                    break;
+                case 6:
                     loggedIn = false;
                     break;
                 default:

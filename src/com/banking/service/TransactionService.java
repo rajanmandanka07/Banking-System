@@ -24,9 +24,9 @@ public class TransactionService {
     }
 
     // Method to get the transaction history for an account
-    public List<Transaction> getAccountTransactionHistory(int accountId) {
+    public List<Transaction> getAccountTransactionHistory(String accountNumber) {
         try {
-            return transactionDAO.getTransactionsByAccountId(accountId);
+            return transactionDAO.getTransactionsByAccountNumber(accountNumber);
         } catch (Exception e) {
             System.err.println("Failed to retrieve transaction history: " + e.getMessage());
             return null;

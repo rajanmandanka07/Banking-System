@@ -62,7 +62,7 @@ public class AccountService {
                 Transaction transaction = new Transaction(accountId, account.getAccountNumber(), "DEPOSIT", amount);
                 transactionDAO.addTransaction(transaction);
 
-                System.out.println("Deposit successful!");
+//                System.out.println("Deposit successful!");
             } else {
                 System.err.println("Invalid deposit operation.");
             }
@@ -174,6 +174,19 @@ public class AccountService {
         } catch (Exception e) {
             System.err.println("Failed to authenticate account by PIN: " + e.getMessage());
             return null;
+        }
+    }
+
+    public Account getAccountByAccountNumber(String accountNumber) {
+        try {
+            Account account = accountDAO.getAccountByNumber(accountNumber);
+            if (account != null) {
+                return account;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

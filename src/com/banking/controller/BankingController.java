@@ -62,17 +62,17 @@ public class BankingController {
 
         // Fetch the user ID associated with the phone number
         Integer userId = userService.getUserIdByPhoneNumber(phoneNumber);
-        System.out.println(userId);
         if (userId == null) {
             System.out.println("User not found with the provided phone number. Please register first.");
             return;
         }
+        System.out.println("User ID: " + userId);
 
-        System.out.println("Enter account type (SAVINGS/CURRENT):");
+        System.out.print("Enter account type (SAVINGS/CURRENT): ");
         String accountType = scanner.nextLine().toUpperCase();
-        System.out.println("Enter account password:");
+        System.out.print("Enter account password: ");
         String password = scanner.nextLine();
-        System.out.println("Enter PIN (4 digits):");
+        System.out.print("Enter PIN (4 digits): ");
         String pin = scanner.nextLine();
 
         // Validate accountType
@@ -129,7 +129,6 @@ public class BankingController {
 
         // Authenticate the account using the account number and PIN
         Account account = accountService.authenticateAccountByPin(accountNumber, pin);
-        System.out.println(account);
         if (account != null) {
             accountService.deposit(account.getAccountId(), amount);
             System.out.println("Deposit successful.");
@@ -186,10 +185,25 @@ public class BankingController {
 
     // Handle viewing transactions
     public void handleViewTransactions() {
-        System.out.println("Enter account ID to view transactions:");
-        int accountId = scanner.nextInt();
+        System.out.print("Enter account number to view transactions: ");
+        String accountNumber = scanner.nextLine();
 
-        transactionService.getAccountTransactionHistory(accountId).forEach(System.out::println);
+        transactionService.getAccountTransactionHistory(accountNumber).forEach(System.out::println);
+    }
+
+    // Handle viewing details
+    public void handleViewDetails() {
+        System.out.print("Enter account number: ");
+        String accountNumber = scanner.nextLine();
+
+        Account account = accountService.getAccountByAccountNumber(accountNumber);
+
+        if (account != null) {
+            System.out.println("Account Details:");
+            System.out.println(account);
+        } else {
+            System.out.println("Invalid account number.");
+        }
     }
 
     // Method to exit the application and close the database connection
