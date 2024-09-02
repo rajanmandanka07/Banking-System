@@ -59,10 +59,10 @@ public class AccountService {
 
                 // Record the transaction
                 Transaction transaction = new Transaction(accountId, account.getAccountNumber(), "DEPOSIT", amount);
-//                transactionDAO.addTransaction(transaction);
                 transactionService.recordTransaction(transaction);
 
-//                System.out.println("Deposit successful!");
+                System.out.println("Deposit successful!");
+                System.out.println(account);
             } else {
                 System.err.println("Invalid deposit operation.");
             }
@@ -75,7 +75,7 @@ public class AccountService {
     public void withdraw(int accountId, double amount) {
         try {
             Account account = accountDAO.getAccountById(accountId);
-            System.out.println(account);
+
             if (account != null && amount > 0) {
                 if (account.getBalance() >= amount) {
                     account.setBalance(account.getBalance() - amount);
@@ -83,10 +83,10 @@ public class AccountService {
 
                     // Record the transaction
                     Transaction transaction = new Transaction(accountId, account.getAccountNumber(), "WITHDRAWAL", amount);
-//                    transactionDAO.addTransaction(transaction);
                     transactionService.recordTransaction(transaction);
 
                     System.out.println("Withdrawal successful!");
+                    System.out.println(account);
                 } else {
                     throw new InsufficientFundsException("Insufficient funds for withdrawal.");
                 }
@@ -124,7 +124,7 @@ public class AccountService {
 //                        transactionDAO.addTransaction(creditTransaction);
                         transactionService.recordTransaction(creditTransaction);
 
-                        System.out.println("Transfer successful!");
+//                        System.out.println("Transfer successful!");
                     } else {
                         throw new InsufficientFundsException("Insufficient funds for transfer.");
                     }

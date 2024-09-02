@@ -122,16 +122,19 @@ public class BankingController {
     public void handleDeposit() {
         System.out.print("Enter account number for deposit: ");
         String accountNumber = scanner.nextLine();
+
         System.out.print("Enter deposit amount: ");
         double amount = scanner.nextDouble();
+        scanner.nextLine();
+
         System.out.print("Enter PIN: ");
-        String pin = scanner.next();
+        String pin = scanner.nextLine();
 
         // Authenticate the account using the account number and PIN
         Account account = accountService.authenticateAccountByPin(accountNumber, pin);
         if (account != null) {
             accountService.deposit(account.getAccountId(), amount);
-            System.out.println("Deposit successful.");
+//            System.out.println("Deposit successful.");
         } else {
             System.out.println("Invalid account number or PIN. Deposit failed.");
         }
@@ -142,17 +145,19 @@ public class BankingController {
         try {
             System.out.print("Enter account number for withdrawal: ");
             String accountNumber = scanner.nextLine();
+
             System.out.print("Enter withdrawal amount: ");
             double amount = scanner.nextDouble();
+            scanner.nextLine();  // Consume the leftover newline
+
             System.out.print("Enter PIN: ");
-            String pin = scanner.next();
+            String pin = scanner.nextLine();
 
             // Authenticate the account using the account number and PIN
             Account account = accountService.authenticateAccountByPin(accountNumber, pin);
-            System.out.println(account);
             if (account != null) {
                 accountService.withdraw(account.getAccountId(), amount);
-                System.out.println("Withdrawal successful.");
+//                System.out.println("Withdrawal successful.");
             } else {
                 System.out.println("Invalid account number or PIN. Withdrawal failed.");
             }
@@ -164,14 +169,17 @@ public class BankingController {
     // Handle fund transfer
     public void handleFundTransfer() {
         try {
-            System.out.println("Enter source account number:");
+            System.out.print("Enter source account number: ");
             String fromAccountNumber = scanner.nextLine();
-            System.out.println("Enter destination account number:");
+
+            System.out.print("Enter destination account number: ");
             String toAccountNumber = scanner.nextLine();
-            System.out.println("Enter transfer amount:");
+
+            System.out.print("Enter transfer amount: ");
             double amount = scanner.nextDouble();
             scanner.nextLine();
-            System.out.println("Enter PIN for source account:");
+
+            System.out.print("Enter PIN for source account: ");
             String sourcePin = scanner.nextLine();
 
             // Perform fund transfer

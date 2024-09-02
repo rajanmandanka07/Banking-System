@@ -17,7 +17,7 @@ public class TransactionService {
     public void recordTransaction(Transaction transaction) {
         try {
             transactionDAO.addTransaction(transaction);
-            System.out.println("Transaction recorded successfully!");
+//            System.out.println("Transaction recorded successfully!");
         } catch (Exception e) {
             System.err.println("Failed to record transaction: " + e.getMessage());
         }
