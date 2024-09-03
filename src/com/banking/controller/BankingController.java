@@ -10,6 +10,7 @@ import com.banking.util.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 public class BankingController {
@@ -100,6 +101,47 @@ public class BankingController {
         }
     }
 
+    // Handle account deletion
+    public void handleDeleteAccount() {
+        System.out.print("Enter account number: ");
+        String accountNumber = scanner.nextLine();
+
+        // Retrieve account details based on account number
+        Account account = accountService.getAccountByAccountNumber(accountNumber);
+
+        if (account == null) {
+            System.out.println("Account not found.");
+            return;
+        }
+
+        // Validate account by asking for the password
+        System.out.print("Enter account password: ");
+        String enteredPassword = scanner.nextLine();
+
+        if (!account.getPassword().equals(enteredPassword)) {
+            System.out.println("Invalid password. Account deletion aborted.");
+            return;
+        }
+
+        // Confirm deletion with the user
+        System.out.println("Are you sure you want to delete the account? (yes/no): ");
+        String confirmation = scanner.nextLine();
+
+        if (!confirmation.equalsIgnoreCase("yes")) {
+            System.out.println("Account deletion canceled.");
+            return;
+        }
+
+        // Delete the account
+        boolean isDeleted = accountService.deleteAccountByNumber(accountNumber, enteredPassword);
+
+        if (isDeleted) {
+            System.out.println("Account successfully deleted.");
+        } else {
+            System.out.println("Failed to delete the account. Please try again.");
+        }
+    }
+
     // Handle user login
     public boolean handleUserLogin() {
         System.out.print("Enter account number: ");
@@ -117,6 +159,25 @@ public class BankingController {
             return false;
         }
     }
+
+    // Handle get all account by phone number
+    public void handleGetAllAccount() {
+        System.out.print("Enter phone number: ");
+        String phoneNumber = scanner.nextLine();
+
+        // Retrieve accounts associated with the provided phone number
+        List<Account> accounts = accountService.getAccountsByPhoneNumber(phoneNumber);
+
+        if (accounts != null && !accounts.isEmpty()) {
+            System.out.println("Accounts associated with phone number " + phoneNumber + ":");
+            for (Account account : accounts) {
+                System.out.println("Account Number: " + account.getAccountNumber() + ", Balance: " + account.getBalance() + ", Account Type: " + account.getAccountType());
+            }
+        } else {
+            System.out.println("No accounts found for the provided phone number.");
+        }
+    }
+
 
     // Handle deposit
     public void handleDeposit() {
@@ -230,4 +291,6 @@ public class BankingController {
         long number = (long) (Math.random() * 1_000_000_000_000L);
         return String.format("%012d", number);
     }
+
+
 }

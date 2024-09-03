@@ -26,6 +26,19 @@ public class TransactionDAO {
         }
     }
 
+    // Method to delete transaction on database
+    public void deleteTransaction(int accountId) {
+        String sql = "DELETE from transactions where account_id = ? ";
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, accountId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     // Method to retrieve all transactions for a specific account by account number
     public List<Transaction> getTransactionsByAccountNumber(String accountNumber) throws SQLException {
         String sql = "SELECT * FROM transactions WHERE account_number = ?";

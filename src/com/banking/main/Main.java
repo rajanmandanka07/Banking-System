@@ -51,7 +51,9 @@ public class Main {
             System.out.println("\nExisting User Menu:");
             System.out.println("1. Create Account");
             System.out.println("2. Login");
-            System.out.println("3. Exit to Main Menu");
+            System.out.println("3. Delete Account");
+            System.out.println("4. All Accounts");
+            System.out.println("5. Exit to Main Menu");
             System.out.print("Please choose an option: ");
 
             int choice = scanner.nextInt();
@@ -67,6 +69,12 @@ public class Main {
                     }
                     break;
                 case 3:
+                    controller.handleDeleteAccount();
+                    break;
+                case 4:
+                    controller.handleGetAllAccount();
+                    break;
+                case 5:
                     running = false;
                     break;
                 default:

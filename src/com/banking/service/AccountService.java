@@ -7,6 +7,7 @@ import com.banking.model.Transaction;
 import com.banking.util.InputValidator;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AccountService {
@@ -34,18 +35,25 @@ public class AccountService {
         return false;
     }
 
-    // Method to close an account
-    public void closeAccount(int accountId) {
+    // Method to delete an account by account number with password validation
+    public boolean deleteAccountByNumber(String accountNumber, String password) {
         try {
-            Account existingAccount = accountDAO.getAccountById(accountId);
-            if (existingAccount != null) {
-                accountDAO.deleteAccount(accountId);
-                System.out.println("Account closed successfully!");
+            // Authenticate the account using account number and password
+            Account account = authenticateAccountByPassword(accountNumber, password);
+
+            if (account != null) {
+                // If authentication is successful, delete the account
+                transactionService.removeTransaction(account.getAccountId());
+                accountDAO.deleteAccount(account.getAccountId());
+                return true;
             } else {
-                System.err.println("Account not found with ID: " + accountId);
+                // If authentication fails, print an error message
+                System.err.println("Account deletion failed: Invalid account number or password.");
+                return false;
             }
         } catch (Exception e) {
-            System.err.println("Failed to close account: " + e.getMessage());
+            System.err.println("Failed to delete account: " + e.getMessage());
+            return false;
         }
     }
 
@@ -141,12 +149,13 @@ public class AccountService {
         }
     }
 
-    // Method to retrieve all accounts (for debugging or administrative purposes)
-    public List<Account> getAllAccounts() {
+    // Method to retrieve all accounts of user based on phone number
+    public List<Account> getAccountsByPhoneNumber(String phoneNumber) {
         try {
-            return accountDAO.getAllAccounts();
+            return accountDAO.getAccountsByPhoneNumber(phoneNumber);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.err.println("Failed to retrieve accounts by phone number: " + e.getMessage());
+            return new ArrayList<>();
         }
     }
 
@@ -183,12 +192,7 @@ public class AccountService {
     // Method to get account by account number
     public Account getAccountByAccountNumber(String accountNumber) {
         try {
-            Account account = accountDAO.getAccountByNumber(accountNumber);
-            if (account != null) {
-                return account;
-            } else {
-                return null;
-            }
+            return accountDAO.getAccountByNumber(accountNumber);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

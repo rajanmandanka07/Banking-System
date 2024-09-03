@@ -23,6 +23,14 @@ public class TransactionService {
         }
     }
 
+    public void removeTransaction(int accountId) {
+        try {
+            transactionDAO.deleteTransaction(accountId);
+        } catch (Exception e) {
+            System.err.println("Failed to record transaction: " + e.getMessage());
+        }
+    }
+
     // Method to get the transaction history for an account
     public List<Transaction> getAccountTransactionHistory(String accountNumber) {
         try {

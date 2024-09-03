@@ -111,29 +111,35 @@ public class AccountDAO {
     }
 
     // Method to retrieve all accounts (for debugging or administrative purposes)
-    public List<Account> getAllAccounts() throws SQLException {
-        String sql = "SELECT * FROM accounts";
+    public List<Account> getAccountsByPhoneNumber(String phoneNumber) throws SQLException {
         List<Account> accounts = new ArrayList<>();
+        String sql = "SELECT a.* FROM accounts a " + "JOIN users u ON a.user_id = u.user_id " + "WHERE u.phone_number = ?";
+
         try {
             Connection conn = DatabaseConnection.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                Account account = new Account(
-                        rs.getInt("account_id"),
-                        rs.getString("account_number"),
-                        rs.getInt("user_id"),
-                        rs.getDouble("balance"),
-                        rs.getString("account_type"),
-                        rs.getTimestamp("created_at"),
-                        rs.getString("password"),
-                        rs.getString("pin")
-                );
-                accounts.add(account);
+
+            pstmt.setString(1, phoneNumber);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Account account = new Account(
+                            rs.getInt("account_id"),
+                            rs.getString("account_number"),
+                            rs.getInt("user_id"),
+                            rs.getDouble("balance"),
+                            rs.getString("account_type"),
+                            rs.getTimestamp("created_at"),
+                            rs.getString("password"),
+                            rs.getString("pin")
+                    );
+                    accounts.add(account);
+                }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error retrieving accounts by phone number: " + e.getMessage(), e);
         }
         return accounts;
     }
+
 }
