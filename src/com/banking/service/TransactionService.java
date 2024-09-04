@@ -17,12 +17,12 @@ public class TransactionService {
     public void recordTransaction(Transaction transaction) {
         try {
             transactionDAO.addTransaction(transaction);
-//            System.out.println("Transaction recorded successfully!");
         } catch (Exception e) {
             System.err.println("Failed to record transaction: " + e.getMessage());
         }
     }
 
+    // Method to remove transaction
     public void removeTransaction(int accountId) {
         try {
             transactionDAO.deleteTransaction(accountId);

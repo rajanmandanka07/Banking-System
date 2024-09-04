@@ -178,7 +178,6 @@ public class BankingController {
         }
     }
 
-
     // Handle deposit
     public void handleDeposit() {
         System.out.print("Enter account number for deposit: ");
@@ -274,6 +273,14 @@ public class BankingController {
         transactionService.getAccountTransactionHistory(accountNumber).forEach(System.out::println);
     }
 
+    // Method to Download Transaction History
+    public void handleDownloadTransactions() {
+        System.out.print("Enter account number to view transactions: ");
+        String accountNumber = scanner.nextLine();
+
+        accountService.downloadTransactions(accountNumber);
+    }
+
     // Method to exit the application and close the database connection
     public void exitApplication() {
         try {
@@ -291,6 +298,4 @@ public class BankingController {
         long number = (long) (Math.random() * 1_000_000_000_000L);
         return String.format("%012d", number);
     }
-
-
 }

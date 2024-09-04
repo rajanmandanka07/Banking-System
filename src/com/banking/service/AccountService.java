@@ -1,9 +1,20 @@
 package com.banking.service;
 
+import com.banking.dao.UserDAO;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
 import com.banking.dao.AccountDAO;
 import com.banking.exception.InsufficientFundsException;
 import com.banking.model.Account;
 import com.banking.model.Transaction;
+import com.banking.model.User;
 import com.banking.util.InputValidator;
 
 import java.sql.SQLException;
@@ -13,10 +24,12 @@ import java.util.List;
 public class AccountService {
 
     private final AccountDAO accountDAO;
+    private final UserDAO userDAO;
     private final TransactionService transactionService;
 
     public AccountService() {
         this.accountDAO = new AccountDAO();
+        this.userDAO = new UserDAO();
         this.transactionService = new TransactionService();
     }
 
@@ -195,6 +208,144 @@ public class AccountService {
             return accountDAO.getAccountByNumber(accountNumber);
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    // Method to Download Transaction History
+    public void downloadTransactions(String accountNumber) {
+        // Retrieve account details
+        Account account = getAccountByAccountNumber(accountNumber);
+
+        if (account == null) {
+            System.out.println("Account not found!");
+            return;
+        }
+
+        // Retrieve user details
+        User user;
+        try {
+            user = userDAO.getUserById(account.getUserId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("An error occurred while retrieving user details.");
+            return;
+        }
+
+        // Retrieve transaction history
+        List<Transaction> transactions = transactionService.getAccountTransactionHistory(accountNumber);
+
+        // Define the output PDF file name
+        String fileName = "Transaction_History_" + accountNumber + ".pdf";
+
+        // Create a new document
+        Document document = new Document();
+
+        try {
+            // Create a PDF writer instance
+            PdfWriter.getInstance(document, new FileOutputStream(fileName));
+
+            // Open the document for writing
+            document.open();
+
+            // Create a table with 2 columns for side-by-side details
+            PdfPTable detailsTable = new PdfPTable(2);
+            detailsTable.setWidthPercentage(100); // Set table width to 100% of the page
+
+            // Set font for the headers
+            Font headerFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+
+            // Add user details header to the table
+            PdfPCell userHeader = new PdfPCell(new Phrase("User Details:", headerFont));
+            userHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+            detailsTable.addCell(userHeader);
+
+            // Add account details header to the table
+            PdfPCell accountHeader = new PdfPCell(new Phrase("Account Details:", headerFont));
+            accountHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+            detailsTable.addCell(accountHeader);
+
+            // Set font for the data
+            Font dataFont = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
+
+            // Add user details to the table
+            detailsTable.addCell(new Phrase("Name: " + user.getName(), dataFont));
+            detailsTable.addCell(new Phrase("Account Number: " + account.getAccountNumber(), dataFont));
+
+            detailsTable.addCell(new Phrase("Email: " + user.getEmail(), dataFont));
+            detailsTable.addCell(new Phrase("Account Type: " + account.getAccountType(), dataFont));
+
+            detailsTable.addCell(new Phrase("Phone Number: " + user.getPhoneNumber(), dataFont));
+            detailsTable.addCell(new Phrase("Balance: ₹" + account.getBalance(), dataFont));
+
+            detailsTable.addCell(new Phrase("Address: " + (user.getAddress() != null ? user.getAddress() : "N/A"), dataFont));
+            detailsTable.addCell(new Phrase("Created At: " + account.getCreatedAt(), dataFont));
+
+            // Add the table to the document
+            document.add(detailsTable);
+
+            // Add a blank line after the table
+            document.add(new Paragraph(" "));
+
+            // Add transaction history in table format
+            document.add(new Paragraph("Transaction History:", headerFont));
+            document.add(new Paragraph(" ")); // Add a blank line
+
+            // Create a table with 4 columns (ID, Type, Amount, Date)
+            PdfPTable table = new PdfPTable(4);
+            table.setWidthPercentage(90);
+
+            // Set the relative widths of each column (e.g., 20%, 30%, 20%, 30%)
+            float[] columnWidths = {2f, 3f, 2f, 3f};
+            table.setWidths(columnWidths);
+
+            // Set the headers for the table
+            PdfPCell header1 = new PdfPCell(new Phrase("Transaction ID", headerFont));
+            header1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(header1);
+
+            PdfPCell header2 = new PdfPCell(new Phrase("Transaction Type", headerFont));
+            header2.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(header2);
+
+            PdfPCell header3 = new PdfPCell(new Phrase("Amount", headerFont));
+            header3.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(header3);
+
+            PdfPCell header4 = new PdfPCell(new Phrase("Date", headerFont));
+            header4.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(header4);
+
+            // Add transaction data to the table with centered alignment
+            for (Transaction transaction : transactions) {
+                PdfPCell cell1 = new PdfPCell(new Phrase(String.valueOf(transaction.getTransactionId()), dataFont));
+                cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(cell1);
+
+                PdfPCell cell2 = new PdfPCell(new Phrase(transaction.getTransactionType(), dataFont));
+                cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(cell2);
+
+                PdfPCell cell3 = new PdfPCell(new Phrase("₹" + String.valueOf(transaction.getAmount()), dataFont));
+                cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(cell3);
+
+                PdfPCell cell4 = new PdfPCell(new Phrase(String.valueOf(transaction.getTransactionDate()), dataFont));
+                cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(cell4);
+            }
+
+            // Add the table to the document
+            document.add(table);
+
+            // Close the document
+            document.close();
+
+            System.out.println("Transaction history downloaded successfully as " + fileName);
+            System.out.println("File saved at: " + new File(fileName).getAbsolutePath());
+
+        } catch (FileNotFoundException | DocumentException e) {
+            e.printStackTrace();
+            System.out.println("An error occurred while downloading the transaction history.");
         }
     }
 }

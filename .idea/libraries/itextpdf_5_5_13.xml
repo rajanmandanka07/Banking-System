@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="itextpdf-5.5.13">
+    <CLASSES>
+      <root url="file://$USER_HOME$/Downloads/itextpdf-5.5.13.2" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/Downloads/itextpdf-5.5.13.2" />
+    </SOURCES>
+    <jarDirectory url="file://$USER_HOME$/Downloads/itextpdf-5.5.13.2" recursive="false" />
+    <jarDirectory url="file://$USER_HOME$/Downloads/itextpdf-5.5.13.2" recursive="false" type="SOURCES" />
+  </library>
+</component>

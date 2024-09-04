@@ -93,7 +93,8 @@ public class Main {
             System.out.println("3. Transfer Funds");
             System.out.println("4. View Account Details");
             System.out.println("5. View Transaction History");
-            System.out.println("6. Exit to Existing User Menu");
+            System.out.println("6. Download Transaction History");
+            System.out.println("7. Exit to Existing User Menu");
             System.out.print("Please choose an option: ");
 
             int choice = scanner.nextInt();
@@ -116,6 +117,9 @@ public class Main {
                     controller.handleViewTransactions();
                     break;
                 case 6:
+                    controller.handleDownloadTransactions();
+                    break;
+                case 7:
                     loggedIn = false;
                     break;
                 default:
