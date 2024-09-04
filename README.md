@@ -15,16 +15,61 @@ This is a console-based banking system application developed in Java, designed t
 
 ## Project Overview
 
-The Banking System project is designed to manage basic banking operations such as account creation, deposits, withdrawals, and fund transfers. The application is entirely console-based and focuses on demonstrating OOP principles in Java.
+This project is a console-based banking system developed using Java. It demonstrates Object-Oriented Programming (OOP) principles and provides basic banking functionalities like user registration, account management, fund transfers, and transaction history tracking. The project uses MySQL as the backend database to persist user and transaction data.
+```
+   src
+   └── com
+      └── banking
+         ├── controller
+         │   └── BankingController.java
+         ├── dao
+         │   ├── AccountDAO.java
+         │   ├── TransactionDAO.java
+         │   └── UserDAO.java
+         ├── exception
+         │   ├── InsufficientFundsException.java
+         │   ├── InvalidTransactionException.java
+         │   └── UserNotFoundException.java
+         ├── main
+         │   └── Main.java
+         ├── model
+         │   ├── Account.java
+         │   ├── Transaction.java
+         │   └── User.java
+         ├── service
+         │   ├── AccountService.java
+         │   ├── TransactionService.java
+         │   └── UserService.java
+         └── util
+             ├── DatabaseConnection.java
+             └── InputValidator.java
+```
 
 ## Features
 
-- **Account Management**: Create, delete, and manage accounts.
-- **User Authentication**: Secure login system using email, password, and PIN.
-- **Fund Transfer**: Transfer money between accounts with minimal PIN requirement.
-- **Transaction History**: View transaction history for accounts.
-- **Data Integrity**: Ensures data consistency by manually deleting related records before user deletion.
-- **Database Management**: Uses MySQL for managing user and account information.
+- **User Registration**:
+   - New users can register by providing their personal information.
+
+- **Account Management**:
+   - Create a bank account under a registered user.
+   - Log in to an existing account using the account number and PIN.
+   - Delete existing accounts.
+   - View all accounts associated with a user.
+
+- **Fund Management**:
+   - **Deposit Funds**: Users can deposit money into their accounts.
+   - **Withdraw Funds**: Users can withdraw money from their accounts.
+   - **Transfer Funds**: Users can transfer money between accounts securely.
+
+- **Account Details**:
+   - View account details including balance, account type, and creation date.
+   - View transaction history for an account.
+   - Download transaction history as a report.
+
+- **Security**:
+   - User login requires an account number and PIN for secure access.
+   - All transactions are recorded and timestamped for audit purposes.
+
 
 ## Database Structure
 
@@ -77,11 +122,29 @@ The application uses MySQL with the following database schema:
 
 ## Getting Started
 
-### Prerequisites
+## Prerequisites
 
-- **Java**: Ensure that Java is installed on your machine.
-- **MySQL**: Set up a MySQL database.
-- **MySQL Workbench**: Used for managing the MySQL database.
+- **Java**:
+   - Ensure that Java is installed on your machine. You can download it from [Oracle's official website](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html).
+
+- **MySQL**:
+   - Set up a MySQL database. You can download MySQL from [MySQL's official website](https://dev.mysql.com/downloads/).
+
+- **MySQL Workbench**:
+   - Used for managing the MySQL database, including creating tables and running SQL queries. Download it from [here](https://dev.mysql.com/downloads/workbench/).
+
+- **JDBC Driver**:
+   - Ensure the MySQL Connector/J (JDBC Driver) is added to your project to enable communication between your Java application and MySQL database. Download it from [here](https://dev.mysql.com/downloads/connector/j/).
+
+- **iText Library**:
+   - The iText library iText 5.5.13.2 is used for PDF operations, such as generating and exporting transaction history reports in PDF format. Add iText to your project dependencies. You can download it from [here](https://github.com/itext/itextpdf/releases/tag/5.5.13.2).
+
+- **IDE**:
+   - Use an Integrated Development Environment (IDE) like IntelliJ IDEA, Eclipse, or NetBeans for coding, running, and debugging the Java application.
+
+- **Git**:
+   - Git is used for version control. Ensure that Git is installed if you plan to manage your project using GitHub or another version control system. Download Git from [here](https://git-scm.com/).
+
 
 ### Installation
 
@@ -106,11 +169,36 @@ The application uses MySQL with the following database schema:
 
 ## Usage
 
-- **Account Creation**: Start by creating an account with your phone number, email, and address.
-- **Login**: Use your email and password to log in.
-- **Deposit/Withdraw Funds**: Perform transactions on your account.
-- **Fund Transfer**: Transfer money between accounts using the source account's PIN.
-- **View Transaction History**: Check past transactions for your account.
+- **Account Creation**:
+   - Start by creating an account with your phone number, email, and address.
+
+- **Login**:
+   - Use your email and password to log in to the system.
+
+- **Deposit/Withdraw Funds**:
+   - Perform transactions on your account by depositing or withdrawing money.
+
+- **Fund Transfer**:
+   - Transfer money between accounts using the source account's PIN for secure transactions.
+
+- **View Transaction History**:
+   - Check past transactions for your account to keep track of your financial activities.
+
+- **View Account Details**:
+   - Access detailed information about your account, including balance, account type, and creation date.
+
+- **Delete Account**:
+   - If necessary, delete your account securely from the system.
+
+- **View All Accounts**:
+   - View all the accounts associated with your user profile.
+
+- **Download Transaction History**:
+   - Download a report of your transaction history for record-keeping or audit purposes.
+
+- **Exit Application**:
+   - Safely exit the application when you're done by selecting the exit option from the main menu.
+
 
 ## Contributing
 
