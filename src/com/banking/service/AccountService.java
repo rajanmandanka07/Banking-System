@@ -211,7 +211,7 @@ public class AccountService {
         }
     }
 
-    // Method to Download Transaction History
+    // Method to Download Transaction History as PDF
     public void downloadTransactions(String accountNumber) {
         // Retrieve account details
         Account account = getAccountByAccountNumber(accountNumber);
@@ -247,38 +247,71 @@ public class AccountService {
             // Open the document for writing
             document.open();
 
+            // Main Header
+            Font headerFont = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
+            Paragraph header = new Paragraph("Transaction History Report", headerFont);
+            header.setAlignment(Element.ALIGN_CENTER);
+            document.add(header);
+            document.add(new Paragraph(" "));
+
+            // Set font for the headers
+            headerFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+
             // Create a table with 2 columns for side-by-side details
             PdfPTable detailsTable = new PdfPTable(2);
             detailsTable.setWidthPercentage(100); // Set table width to 100% of the page
 
-            // Set font for the headers
-            Font headerFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+            // Set a fixed height for the cells
+            float fixedHeaderCellHeight = 25f; // Adjust this value as needed
+            float fixedDataCellHeight = 20f;
 
             // Add user details header to the table
             PdfPCell userHeader = new PdfPCell(new Phrase("User Details:", headerFont));
             userHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+            userHeader.setFixedHeight(fixedHeaderCellHeight);
             detailsTable.addCell(userHeader);
 
             // Add account details header to the table
             PdfPCell accountHeader = new PdfPCell(new Phrase("Account Details:", headerFont));
             accountHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+            accountHeader.setFixedHeight(fixedHeaderCellHeight);
             detailsTable.addCell(accountHeader);
 
             // Set font for the data
             Font dataFont = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
 
-            // Add user details to the table
-            detailsTable.addCell(new Phrase("Name: " + user.getName(), dataFont));
-            detailsTable.addCell(new Phrase("Account Number: " + account.getAccountNumber(), dataFont));
+            // Add user details to the table with fixed cell height
+            PdfPCell cell1 = new PdfPCell(new Phrase("Name: " + user.getName(), dataFont));
+            cell1.setFixedHeight(fixedDataCellHeight);
+            detailsTable.addCell(cell1);
 
-            detailsTable.addCell(new Phrase("Email: " + user.getEmail(), dataFont));
-            detailsTable.addCell(new Phrase("Account Type: " + account.getAccountType(), dataFont));
+            PdfPCell cell2 = new PdfPCell(new Phrase("Account Number: " + account.getAccountNumber(), dataFont));
+            cell2.setFixedHeight(fixedDataCellHeight);
+            detailsTable.addCell(cell2);
 
-            detailsTable.addCell(new Phrase("Phone Number: " + user.getPhoneNumber(), dataFont));
-            detailsTable.addCell(new Phrase("Balance: ₹" + account.getBalance(), dataFont));
+            PdfPCell cell3 = new PdfPCell(new Phrase("Email: " + user.getEmail(), dataFont));
+            cell3.setFixedHeight(fixedDataCellHeight);
+            detailsTable.addCell(cell3);
 
-            detailsTable.addCell(new Phrase("Address: " + (user.getAddress() != null ? user.getAddress() : "N/A"), dataFont));
-            detailsTable.addCell(new Phrase("Created At: " + account.getCreatedAt(), dataFont));
+            PdfPCell cell4 = new PdfPCell(new Phrase("Account Type: " + account.getAccountType(), dataFont));
+            cell4.setFixedHeight(fixedDataCellHeight);
+            detailsTable.addCell(cell4);
+
+            PdfPCell cell5 = new PdfPCell(new Phrase("Phone Number: " + user.getPhoneNumber(), dataFont));
+            cell5.setFixedHeight(fixedDataCellHeight);
+            detailsTable.addCell(cell5);
+
+            PdfPCell cell6 = new PdfPCell(new Phrase("Balance: " + account.getBalance(), dataFont));
+            cell6.setFixedHeight(fixedDataCellHeight);
+            detailsTable.addCell(cell6);
+
+            PdfPCell cell7 = new PdfPCell(new Phrase("Address: " + (user.getAddress() != null ? user.getAddress() : "N/A"), dataFont));
+            cell7.setFixedHeight(fixedDataCellHeight);
+            detailsTable.addCell(cell7);
+
+            PdfPCell cell8 = new PdfPCell(new Phrase("Created At: " + account.getCreatedAt(), dataFont));
+            cell8.setFixedHeight(fixedDataCellHeight);
+            detailsTable.addCell(cell8);
 
             // Add the table to the document
             document.add(detailsTable);
@@ -301,37 +334,45 @@ public class AccountService {
             // Set the headers for the table
             PdfPCell header1 = new PdfPCell(new Phrase("Transaction ID", headerFont));
             header1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            header1.setFixedHeight(fixedHeaderCellHeight); // Set the height of the header cell
             table.addCell(header1);
 
             PdfPCell header2 = new PdfPCell(new Phrase("Transaction Type", headerFont));
             header2.setHorizontalAlignment(Element.ALIGN_CENTER);
+            header2.setFixedHeight(fixedHeaderCellHeight); // Set the height of the header cell
             table.addCell(header2);
 
             PdfPCell header3 = new PdfPCell(new Phrase("Amount", headerFont));
             header3.setHorizontalAlignment(Element.ALIGN_CENTER);
+            header3.setFixedHeight(fixedHeaderCellHeight); // Set the height of the header cell
             table.addCell(header3);
 
             PdfPCell header4 = new PdfPCell(new Phrase("Date", headerFont));
             header4.setHorizontalAlignment(Element.ALIGN_CENTER);
+            header4.setFixedHeight(fixedHeaderCellHeight); // Set the height of the header cell
             table.addCell(header4);
 
             // Add transaction data to the table with centered alignment
             for (Transaction transaction : transactions) {
-                PdfPCell cell1 = new PdfPCell(new Phrase(String.valueOf(transaction.getTransactionId()), dataFont));
-                cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-                table.addCell(cell1);
+                PdfPCell cell9 = new PdfPCell(new Phrase(String.valueOf(transaction.getTransactionId()), dataFont));
+                cell9.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell9.setFixedHeight(fixedDataCellHeight); // Set the height of the data cell
+                table.addCell(cell9);
 
-                PdfPCell cell2 = new PdfPCell(new Phrase(transaction.getTransactionType(), dataFont));
-                cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
-                table.addCell(cell2);
+                PdfPCell cell10 = new PdfPCell(new Phrase(transaction.getTransactionType(), dataFont));
+                cell10.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell10.setFixedHeight(fixedDataCellHeight); // Set the height of the data cell
+                table.addCell(cell10);
 
-                PdfPCell cell3 = new PdfPCell(new Phrase("₹" + String.valueOf(transaction.getAmount()), dataFont));
-                cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
-                table.addCell(cell3);
+                PdfPCell cell11 = new PdfPCell(new Phrase(String.valueOf(transaction.getAmount()), dataFont));
+                cell11.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell11.setFixedHeight(fixedDataCellHeight); // Set the height of the data cell
+                table.addCell(cell11);
 
-                PdfPCell cell4 = new PdfPCell(new Phrase(String.valueOf(transaction.getTransactionDate()), dataFont));
-                cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
-                table.addCell(cell4);
+                PdfPCell cell12 = new PdfPCell(new Phrase(String.valueOf(transaction.getTransactionDate()), dataFont));
+                cell12.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell12.setFixedHeight(fixedDataCellHeight); // Set the height of the data cell
+                table.addCell(cell12);
             }
 
             // Add the table to the document
