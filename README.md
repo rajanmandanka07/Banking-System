@@ -122,7 +122,7 @@ The application uses MySQL with the following database schema:
 
 ## Getting Started
 
-## Prerequisites
+### Prerequisites
 
 - **Java**:
    - Ensure that Java is installed on your machine. You can download it from [Oracle's official website](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html).
