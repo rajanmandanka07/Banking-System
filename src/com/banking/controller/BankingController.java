@@ -275,7 +275,7 @@ public class BankingController {
 
     // Method to Download Transaction History
     public void handleDownloadTransactions() {
-        System.out.print("Enter account number to view transactions: ");
+        System.out.print("Enter account number to download transactions: ");
         String accountNumber = scanner.nextLine();
 
         accountService.downloadTransactions(accountNumber);
